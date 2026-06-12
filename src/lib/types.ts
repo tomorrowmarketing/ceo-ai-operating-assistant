@@ -243,3 +243,25 @@ export interface DailyBriefing {
   approvals: ApprovalItem[];
   recommendations: RecommendedAction[];
 }
+
+/**
+ * 광고주 360° 상세 뷰.
+ * 핵심 원칙(광고주 = 계약+업무+커뮤니케이션+일정+재무+광고 성과)을 한 화면에 모은다.
+ */
+export interface AdvertiserDetail {
+  advertiser: Advertiser;
+  manager?: Staff;
+  performance: {
+    leads30d: number;
+    leadDeltaPct: number;
+    consultRate: number;
+    monthlyBudget: number;
+  };
+  contracts: Contract[];
+  tasks: Task[];
+  communications: Communication[];
+  upcomingEvents: CalendarEvent[];
+  finance: FinanceTransaction[];
+  /** 해당 광고주에 감지된 리스크 신호 (없으면 undefined) */
+  risk?: RiskSignal;
+}

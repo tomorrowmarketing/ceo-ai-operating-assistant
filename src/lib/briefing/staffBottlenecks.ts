@@ -1,5 +1,7 @@
 import type { StaffBottleneck } from "@/lib/types";
-import { staff, tasks } from "@/lib/mock";
+import { data } from "@/lib/data";
+
+const { staff, tasks } = data;
 import { bySeverity, daysBetween, isOverdue } from "./utils";
 
 /**

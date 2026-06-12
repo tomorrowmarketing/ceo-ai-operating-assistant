@@ -1,5 +1,7 @@
 import type { CommHighlight, Severity } from "@/lib/types";
-import { advertiserName, communications } from "@/lib/mock";
+import { data } from "@/lib/data";
+
+const { advertiserName, communications } = data;
 import { bySeverity } from "./utils";
 
 /**

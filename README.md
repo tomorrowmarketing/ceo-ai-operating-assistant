@@ -35,11 +35,20 @@ npm run dev
 # 브라우저에서 http://localhost:3000 접속
 ```
 
-프로덕션 빌드 검증:
+프로덕션 빌드 검증 / 테스트:
 
 ```bash
-npm run build
+npm run build   # 타입체크 + 프로덕션 빌드
+npm test        # 브리핑 비즈니스 로직 단위 테스트 (node:test + tsx)
 ```
+
+## 주요 화면
+
+| 경로 | 설명 |
+| --- | --- |
+| `/` | 일일 운영 브리핑 대시보드 |
+| `/advertisers` | 광고주 목록 |
+| `/advertisers/[id]` | 광고주 360° 상세 (계약·업무·커뮤니케이션·일정·재무·성과) |
 
 ## 프로젝트 구조
 
@@ -50,7 +59,9 @@ src/
   lib/
     types.ts           # 도메인 타입 단일 정의처
     mock/              # 가상 데이터 + TODAY 기준일
-    briefing/          # 비즈니스 로직(순수 함수) + 일일 브리핑 조립
+    data/              # DataSource 어댑터 레이어 (실데이터 교체 지점)
+    briefing/          # 비즈니스 로직(순수 함수) + 일일 브리핑 조립 (+ *.test.ts)
+    advertiser.ts      # 광고주 360° 상세 뷰 빌더
 docs/                  # 제품 문서 00~09
 CLAUDE.md              # AI 코딩 도구용 단일 기준 문서
 AGENTS.md              # 타 AI 도구 호환용 요약

@@ -1,10 +1,7 @@
 import type { RiskSignal } from "@/lib/types";
-import {
-  advertisers,
-  communications,
-  contracts,
-  financeTransactions,
-} from "@/lib/mock";
+import { data } from "@/lib/data";
+
+const { advertisers, communications, contracts, financeTransactions } = data;
 import { bySeverity, daysBetween } from "./utils";
 
 /**

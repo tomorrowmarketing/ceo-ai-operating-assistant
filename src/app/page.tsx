@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { buildDailyBriefing } from "@/lib/briefing";
 import { DailyBriefingHeader } from "@/components/DailyBriefing";
 import { CeoActionItems } from "@/components/CeoActionItems";
@@ -21,6 +22,19 @@ export default function DashboardPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
+      {/* 상단 내비게이션 */}
+      <nav className="mb-3 flex items-center justify-between">
+        <span className="text-xs font-bold tracking-tight text-gray-400">
+          대표님 운영 비서
+        </span>
+        <Link
+          href="/advertisers"
+          className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-600 hover:bg-gray-50"
+        >
+          광고주 목록 →
+        </Link>
+      </nav>
+
       {/* 1. 일일 브리핑 헤더 + 핵심 지표 */}
       <DailyBriefingHeader briefing={briefing} />
 

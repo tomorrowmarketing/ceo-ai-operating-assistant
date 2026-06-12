@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { RiskSignal } from "@/lib/types";
 import { Section, EmptyState } from "./ui/Section";
 import { SeverityBadge, Chip } from "./ui/SeverityBadge";
@@ -22,9 +23,12 @@ export function AdvertiserRiskSignals({ signals }: { signals: RiskSignal[] }) {
             >
               <div className="flex flex-wrap items-center gap-2">
                 <SeverityBadge severity={r.severity} />
-                <span className="text-sm font-semibold text-gray-900">
+                <Link
+                  href={`/advertisers/${r.advertiserId}`}
+                  className="text-sm font-semibold text-gray-900 underline-offset-2 hover:underline"
+                >
                   {r.advertiserName}
-                </span>
+                </Link>
                 <Chip>{r.industry}</Chip>
               </div>
               <div className="mt-1.5 flex flex-wrap gap-1.5">

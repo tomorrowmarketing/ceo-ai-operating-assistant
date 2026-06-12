@@ -1,5 +1,7 @@
 import type { ScheduleSummary } from "@/lib/types";
-import { advertiserName, calendarEvents } from "@/lib/mock";
+import { data } from "@/lib/data";
+
+const { advertiserName, calendarEvents } = data;
 
 /**
  * 오늘 일정 요약을 생성한다.

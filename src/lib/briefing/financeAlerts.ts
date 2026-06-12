@@ -1,9 +1,7 @@
 import type { FinanceAlert, Severity } from "@/lib/types";
-import {
-  advertiserName,
-  contracts,
-  financeTransactions,
-} from "@/lib/mock";
+import { data } from "@/lib/data";
+
+const { advertiserName, contracts, financeTransactions } = data;
 import { bySeverity, daysBetween } from "./utils";
 
 /**
