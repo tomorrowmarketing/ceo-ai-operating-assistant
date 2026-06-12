@@ -1,0 +1,88 @@
+import type { Contract } from "@/lib/types";
+
+/**
+ * 계약 (가상 데이터) - 기준일 2026-06-12
+ * endDate 가 가까우면 갱신예정/만료임박으로 분류된다.
+ */
+export const contracts: Contract[] = [
+  {
+    id: "ct1",
+    advertiserId: "a1",
+    title: "강남미소치과 퍼포먼스 광고 대행",
+    monthlyValue: 8_000_000,
+    startDate: "2024-03-01",
+    endDate: "2026-08-31",
+    status: "진행중",
+    autoRenew: true,
+  },
+  {
+    id: "ct2",
+    advertiserId: "a2",
+    title: "바로서는정형외과 광고 대행",
+    monthlyValue: 6_500_000,
+    startDate: "2024-09-01",
+    endDate: "2026-06-30",
+    status: "만료임박",
+    autoRenew: false,
+  },
+  {
+    id: "ct3",
+    advertiserId: "a3",
+    title: "법무법인 정도 광고 대행",
+    monthlyValue: 12_000_000,
+    startDate: "2023-11-01",
+    endDate: "2026-10-31",
+    status: "진행중",
+    autoRenew: true,
+  },
+  {
+    id: "ct4",
+    advertiserId: "a4",
+    title: "한결법률사무소 광고 대행",
+    monthlyValue: 9_000_000,
+    startDate: "2025-01-01",
+    endDate: "2026-06-30",
+    status: "만료임박",
+    autoRenew: false,
+  },
+  {
+    id: "ct5",
+    advertiserId: "a5",
+    title: "드라이브원 렌터카 광고 대행",
+    monthlyValue: 15_000_000,
+    startDate: "2023-06-01",
+    endDate: "2026-07-31",
+    status: "갱신예정",
+    autoRenew: true,
+  },
+  {
+    id: "ct6",
+    advertiserId: "a6",
+    title: "스마트리스 광고 대행",
+    monthlyValue: 11_000_000,
+    startDate: "2024-05-01",
+    endDate: "2026-09-30",
+    status: "진행중",
+    autoRenew: false,
+  },
+  {
+    id: "ct7",
+    advertiserId: "a7",
+    title: "라인성형외과 광고 대행 (신규)",
+    monthlyValue: 5_000_000,
+    startDate: "2026-06-01",
+    endDate: "2027-05-31",
+    status: "진행중",
+    autoRenew: false,
+  },
+  {
+    id: "ct8",
+    advertiserId: "a8",
+    title: "J&K법무그룹 광고 대행",
+    monthlyValue: 10_000_000,
+    startDate: "2024-02-01",
+    endDate: "2026-07-15",
+    status: "갱신예정",
+    autoRenew: true,
+  },
+];

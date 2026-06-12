@@ -1,0 +1,108 @@
+import type { Communication } from "@/lib/types";
+
+/**
+ * 커뮤니케이션 (가상 데이터)
+ * 원문/개인정보는 저장하지 않고 AI 요약과 마스킹된 발신자만 보관한다.
+ * 전화번호는 마스킹 형태(010-****-####)로만 표기한다.
+ */
+export const communications: Communication[] = [
+  {
+    id: "c1",
+    channel: "카카오톡",
+    advertiserId: "a4",
+    from: "한결법률사무소 대표 (010-****-3271)",
+    subject: "이번 달 성과 관련 문의",
+    summary:
+      "리드가 너무 줄었다며 강한 불만 표시. 이번 주 안에 개선안과 미팅을 요청함.",
+    receivedAt: "2026-06-12 07:40",
+    requiresReply: true,
+    sentiment: "부정",
+    important: true,
+  },
+  {
+    id: "c2",
+    channel: "이메일",
+    advertiserId: "a2",
+    from: "바로서는정형외과 실장 (masked@clinic.example)",
+    subject: "광고비 대비 문의량 감소 건",
+    summary:
+      "최근 2주 전화 문의가 체감상 절반으로 줄었다는 피드백. 원인 설명 요청.",
+    receivedAt: "2026-06-12 08:10",
+    requiresReply: true,
+    sentiment: "부정",
+    important: true,
+  },
+  {
+    id: "c3",
+    channel: "이메일",
+    advertiserId: "a1",
+    from: "강남미소치과 원장 (masked@dental.example)",
+    subject: "7월 예산 증액 검토",
+    summary: "결과 만족스럽다며 7월 예산 증액을 긍정 검토 중. 제안서 요청.",
+    receivedAt: "2026-06-11 18:22",
+    requiresReply: true,
+    sentiment: "긍정",
+    important: true,
+  },
+  {
+    id: "c4",
+    channel: "전화",
+    advertiserId: "a5",
+    from: "드라이브원 렌터카 본부장 (010-****-8842)",
+    subject: "하반기 차종 라인업 확대 논의",
+    summary: "하반기 광고 확대 의향. 다음 주 정기 미팅에서 상세 논의 예정.",
+    receivedAt: "2026-06-11 15:05",
+    requiresReply: false,
+    sentiment: "긍정",
+    important: false,
+  },
+  {
+    id: "c5",
+    channel: "슬랙",
+    advertiserId: null,
+    from: "이지은 (AE)",
+    subject: "한결법률 대응 관련 공유",
+    summary:
+      "한결법률 대표 불만 관련, 대표님 직접 연락이 필요할 것 같다는 내부 의견.",
+    receivedAt: "2026-06-12 08:25",
+    requiresReply: false,
+    sentiment: "중립",
+    important: true,
+  },
+  {
+    id: "c6",
+    channel: "카카오톡",
+    advertiserId: "a6",
+    from: "스마트리스 마케팅팀 (010-****-1190)",
+    subject: "리드 품질 문의",
+    summary: "유입은 되는데 계약 전환이 약하다는 피드백. 폼 단계 점검 요청.",
+    receivedAt: "2026-06-11 11:48",
+    requiresReply: true,
+    sentiment: "중립",
+    important: false,
+  },
+  {
+    id: "c7",
+    channel: "이메일",
+    advertiserId: "a7",
+    from: "라인성형외과 실장 (masked@line.example)",
+    subject: "온보딩 일정 확인",
+    summary: "광고 시작일 확정 요청. 동의서/소재 가이드 수신 여부 확인.",
+    receivedAt: "2026-06-11 09:30",
+    requiresReply: true,
+    sentiment: "중립",
+    important: false,
+  },
+  {
+    id: "c8",
+    channel: "이메일",
+    advertiserId: "a3",
+    from: "법무법인 정도 사무장 (masked@law.example)",
+    subject: "정기 리포트 잘 받았습니다",
+    summary: "리포트 확인 완료, 현재 운영에 만족. 별도 회신 불필요.",
+    receivedAt: "2026-06-10 17:14",
+    requiresReply: false,
+    sentiment: "긍정",
+    important: false,
+  },
+];

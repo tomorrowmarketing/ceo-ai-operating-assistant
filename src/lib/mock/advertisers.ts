@@ -1,0 +1,120 @@
+import type { Advertiser } from "@/lib/types";
+
+/**
+ * 광고주 (가상 데이터)
+ *
+ * leads30d/leadDeltaPct/consultRate 는 광고 성과 신호로,
+ * 리스크 신호 산출에 사용된다. (원본 리드 DB는 저장하지 않는다.)
+ */
+export const advertisers: Advertiser[] = [
+  {
+    id: "a1",
+    name: "강남미소치과",
+    industry: "병의원",
+    status: "정상",
+    monthlyBudget: 8_000_000,
+    managerId: "s1",
+    since: "2024-03",
+    leads30d: 142,
+    leadDeltaPct: 6,
+    consultRate: 38,
+    lastContact: "2026-06-11",
+  },
+  {
+    id: "a2",
+    name: "바로서는정형외과",
+    industry: "병의원",
+    status: "주의",
+    monthlyBudget: 6_500_000,
+    managerId: "s2",
+    since: "2024-09",
+    leads30d: 71,
+    leadDeltaPct: -34,
+    consultRate: 21,
+    lastContact: "2026-06-04",
+  },
+  {
+    id: "a3",
+    name: "법무법인 정도",
+    industry: "법무법인",
+    status: "정상",
+    monthlyBudget: 12_000_000,
+    managerId: "s1",
+    since: "2023-11",
+    leads30d: 96,
+    leadDeltaPct: 12,
+    consultRate: 29,
+    lastContact: "2026-06-10",
+  },
+  {
+    id: "a4",
+    name: "한결법률사무소",
+    industry: "법무법인",
+    status: "위험",
+    monthlyBudget: 9_000_000,
+    managerId: "s2",
+    since: "2025-01",
+    leads30d: 38,
+    leadDeltaPct: -52,
+    consultRate: 14,
+    lastContact: "2026-05-28",
+  },
+  {
+    id: "a5",
+    name: "드라이브원 렌터카",
+    industry: "장기렌트/리스",
+    status: "정상",
+    monthlyBudget: 15_000_000,
+    managerId: "s3",
+    since: "2023-06",
+    leads30d: 264,
+    leadDeltaPct: 9,
+    consultRate: 18,
+    lastContact: "2026-06-11",
+  },
+  {
+    id: "a6",
+    name: "스마트리스",
+    industry: "장기렌트/리스",
+    status: "주의",
+    monthlyBudget: 11_000_000,
+    managerId: "s3",
+    since: "2024-05",
+    leads30d: 158,
+    leadDeltaPct: -19,
+    consultRate: 12,
+    lastContact: "2026-06-06",
+  },
+  {
+    id: "a7",
+    name: "라인성형외과",
+    industry: "병의원",
+    status: "온보딩",
+    monthlyBudget: 5_000_000,
+    managerId: "s2",
+    since: "2026-06",
+    leads30d: 0,
+    leadDeltaPct: 0,
+    consultRate: 0,
+    lastContact: "2026-06-09",
+  },
+  {
+    id: "a8",
+    name: "J&K법무그룹",
+    industry: "법무법인",
+    status: "정상",
+    monthlyBudget: 10_000_000,
+    managerId: "s1",
+    since: "2024-02",
+    leads30d: 88,
+    leadDeltaPct: 3,
+    consultRate: 26,
+    lastContact: "2026-06-11",
+  },
+];
+
+export const advertiserById = (id: string | null): Advertiser | undefined =>
+  id ? advertisers.find((a) => a.id === id) : undefined;
+
+export const advertiserName = (id: string | null): string | undefined =>
+  advertiserById(id)?.name;
