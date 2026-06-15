@@ -13,6 +13,21 @@ async function main() {
     process.exit(1);
   }
 
+  // 진단: 토큰이 어떤 봇인지 + 웹훅 여부
+  try {
+    const me = await (await fetch(`https://api.telegram.org/bot${token}/getMe`)).json();
+    if (me.ok) {
+      console.log(`이 토큰의 봇: @${me.result.username} (${me.result.first_name})`);
+      console.log("→ 텔레그램에서 메시지를 보낸 봇이 위 @사용자명과 같은지 확인하세요.\n");
+    }
+    const wh = await (await fetch(`https://api.telegram.org/bot${token}/getWebhookInfo`)).json();
+    if (wh.ok && wh.result?.url) {
+      console.log(`⚠️ 웹훅이 설정돼 있어 getUpdates가 비어있습니다: ${wh.result.url}\n`);
+    }
+  } catch {
+    /* 진단 실패는 무시 */
+  }
+
   const res = await fetch(`https://api.telegram.org/bot${token}/getUpdates`);
   const json = (await res.json()) as {
     ok: boolean;
