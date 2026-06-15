@@ -1,5 +1,6 @@
 import { loadDataSource } from "@/lib/data";
 import { buildDailyReport, reportToText } from "@/lib/report";
+import { buildAiSummary } from "@/lib/ai/summary";
 import { emailConfigured, sendEmail } from "./email";
 import { sendTelegram, telegramConfigured } from "./telegram";
 
@@ -19,7 +20,8 @@ export async function sendDailyReport(): Promise<{
 }> {
   const ds = await loadDataSource();
   const report = buildDailyReport(ds);
-  const text = reportToText(report);
+  const ai = await buildAiSummary(report, ds); // 키 없으면 null → 집계 보고서로
+  const text = reportToText(report, ai);
   const subject = `[운영비서] ${report.dateLabel} 일일 보고서`;
   const results: SendResult[] = [];
 

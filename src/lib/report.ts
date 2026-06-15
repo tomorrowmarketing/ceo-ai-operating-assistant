@@ -26,6 +26,14 @@ export interface StaffReport {
   tasks: ReportTaskLine[];
 }
 
+/** AI가 생성한 요약 (글·이미지 파악 기반). 키 미설정 시 없음(null). */
+export interface AiSummary {
+  /** 전체 핵심 3~5줄 */
+  overall: string;
+  /** 담당자명 → 2~3줄 요약 */
+  perStaff: Record<string, string>;
+}
+
 export interface DailyReport {
   dateLabel: string;
   summary: {
@@ -152,10 +160,15 @@ function taskLineText(t: ReportTaskLine): string {
 }
 
 /** 보고서를 카톡·메일·텔레그램에 붙여넣기 좋은 일반 텍스트로 변환 */
-export function reportToText(r: DailyReport): string {
+export function reportToText(r: DailyReport, ai?: AiSummary | null): string {
   const L: string[] = [];
   L.push(`📋 오늘의 운영 보고서 — ${r.dateLabel}`);
   L.push("");
+  if (ai?.overall) {
+    L.push("🤖 오늘의 핵심");
+    L.push(ai.overall.trim());
+    L.push("");
+  }
   L.push("[ 요약 ]");
   L.push(`· 운영 광고주: ${r.summary.advertisers}곳`);
   L.push(
@@ -170,6 +183,8 @@ export function reportToText(r: DailyReport): string {
     L.push(
       `■ ${s.name} — 진행 ${s.inProgress} · 대기 ${s.waiting}${s.stale > 0 ? ` · 지연 ${s.stale}` : ""}`
     );
+    const aiLine = ai?.perStaff?.[s.name];
+    if (aiLine) L.push(`   🤖 ${aiLine.trim()}`);
     for (const t of s.tasks) L.push(taskLineText(t));
   }
   L.push("");

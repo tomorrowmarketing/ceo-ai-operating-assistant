@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { loadDataSource } from "@/lib/data";
 import { buildDailyReport, reportToText } from "@/lib/report";
+import { buildAiSummary } from "@/lib/ai/summary";
 import { Section, EmptyState } from "@/components/ui/Section";
 import { Chip } from "@/components/ui/SeverityBadge";
 import { CopyButton } from "@/components/CopyButton";
@@ -9,10 +10,14 @@ export const metadata = {
   title: "오늘의 일일 보고서 | 대표님 운영 비서",
 };
 
+// AI 요약 생성 비용을 고려해 30분 캐시 (ISR)
+export const revalidate = 1800;
+
 export default async function ReportPage() {
   const ds = await loadDataSource();
   const report = buildDailyReport(ds);
-  const text = reportToText(report);
+  const ai = await buildAiSummary(report, ds); // 키 없으면 null
+  const text = reportToText(report, ai);
   const s = report.summary;
 
   return (
@@ -34,6 +39,16 @@ export default async function ReportPage() {
           </Link>
         </div>
       </div>
+
+      {/* AI 핵심 요약 */}
+      {ai?.overall && (
+        <div className="mt-4 rounded-xl border border-violet-200 bg-violet-50/60 p-4">
+          <div className="text-xs font-bold text-violet-700">🤖 오늘의 핵심 (AI 요약)</div>
+          <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-gray-800">
+            {ai.overall}
+          </p>
+        </div>
+      )}
 
       {/* 요약 */}
       <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -76,6 +91,11 @@ export default async function ReportPage() {
                       )}
                     </span>
                   </div>
+                  {ai?.perStaff?.[st.name] && (
+                    <p className="mt-1 rounded bg-violet-50 px-2 py-1 text-xs text-violet-800">
+                      🤖 {ai.perStaff[st.name]}
+                    </p>
+                  )}
                   <ul className="mt-2 space-y-1">
                     {st.tasks.map((t, i) => (
                       <li key={i} className="flex items-start gap-2 text-xs">

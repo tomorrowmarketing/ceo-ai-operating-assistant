@@ -26,6 +26,20 @@
 3. 방금 만든 봇을 텔레그램에서 찾아 **아무 메시지나 한 번 전송** ("안녕")
 4. 터미널: `npm run telegram:chatid` → 출력된 `TELEGRAM_CHAT_ID=...` 를 `.env.local` 에 입력
 
+## B-2. AI 요약 (글·이미지 파악) — 선택
+
+보고서에 **AI가 업무 글·이미지를 읽고 만든 요약**(오늘의 핵심 + 담당자별)을 넣으려면 Anthropic 키가 필요하다.
+
+1. **console.anthropic.com → API Keys → Create Key** → 결제수단/크레딧 등록
+2. `.env.local`(및 Vercel)에 입력:
+   ```
+   ANTHROPIC_API_KEY=sk-ant-...
+   ANTHROPIC_MODEL=claude-opus-4-8   # (선택) 비용 절감 시 claude-haiku-4-5
+   ```
+- 키가 없으면 AI 요약은 **자동으로 건너뛰고** 집계 보고서만 발송된다(폴백).
+- AI는 미완료 업무 일부의 **본문 텍스트와 첨부 이미지**를 읽어 요약한다. (Notion 읽기 권한으로 충분, 추가 권한 불필요)
+- 비용: 글 요약은 저렴, 이미지 분석은 건당 비용↑. 모델/대상 수로 조절.
+
 ## C. 로컬에서 발송 테스트
 
 ```

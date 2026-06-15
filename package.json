@@ -14,6 +14,7 @@
     "report:send": "node --env-file-if-exists=.env.local --env-file-if-exists=.env --import tsx scripts/send-report.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.104.1",
     "next": "^15.1.6",
     "nodemailer": "^6.9.16",
     "react": "^19.0.0",
