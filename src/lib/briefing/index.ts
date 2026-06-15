@@ -42,8 +42,8 @@ export function buildDailyBriefing(
   const staffBottlenecks = buildStaffBottlenecks(ds, today);
   const commHighlights = buildCommHighlights(ds);
   const financeAlerts = buildFinanceAlerts(ds, today);
-  const approvals = buildApprovals();
-  const recommendations = buildRecommendations();
+  const approvals = buildApprovals(ds);
+  const recommendations = buildRecommendations(ds);
 
   const activeAdvertisers = advertisers.filter(
     (a) => a.status !== "온보딩"

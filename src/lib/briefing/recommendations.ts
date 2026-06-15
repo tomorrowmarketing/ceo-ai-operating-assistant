@@ -1,4 +1,5 @@
 import type { RecommendedAction } from "@/lib/types";
+import type { DataSource } from "@/lib/data";
 
 /**
  * AI 추천 액션 (제안 only, 실행 아님).
@@ -6,8 +7,10 @@ import type { RecommendedAction } from "@/lib/types";
  * AI는 읽고·요약하고·우선순위를 정하고·추천하고·요청 시 초안을 작성한다.
  * 추천은 대표의 의사결정을 돕기 위한 것이며 자동 실행되지 않는다.
  */
-export function buildRecommendations(): RecommendedAction[] {
-  return [
+export function buildRecommendations(ds: DataSource): RecommendedAction[] {
+  // 예시 항목은 해당 광고주가 현재 데이터에 존재할 때만 노출 (실데이터에선 자동 숨김)
+  const names = new Set(ds.advertisers.map((a) => a.name));
+  const items: RecommendedAction[] = [
     {
       id: "rec1",
       title: "한결법률사무소: 오늘 14시 상담콜 전 회복 플랜 확정",
@@ -38,4 +41,5 @@ export function buildRecommendations(): RecommendedAction[] {
       expectedImpact: "소재 갱신 시 문의량 회복 및 6/30 계약 갱신 우호 환경 조성.",
     },
   ];
+  return items.filter((i) => !i.advertiserName || names.has(i.advertiserName));
 }

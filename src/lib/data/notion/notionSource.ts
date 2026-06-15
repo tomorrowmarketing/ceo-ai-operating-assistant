@@ -13,6 +13,7 @@ import {
   mapTask,
 } from "./map";
 import type { Staff } from "@/lib/types";
+import { deriveAdvertisersFromTasks } from "./deriveAdvertisers";
 
 /** Asia/Seoul 기준 오늘 날짜 (YYYY-MM-DD) */
 function seoulToday(): string {
@@ -58,8 +59,14 @@ export async function createNotionSource(): Promise<DataSource> {
     safe("계약", db.contracts),
   ]);
 
-  const advertisers = advPages.map(mapAdvertiser);
+  let advertisers = advPages.map(mapAdvertiser);
   const tasks = taskPages.map(mapTask);
+
+  // 별도 광고주 표가 없으면 업무 제목에서 광고주를 도출한다.
+  // (deriveAdvertisersFromTasks 가 각 업무의 advertiserId 도 채운다)
+  if (advertisers.length === 0) {
+    advertisers = deriveAdvertisersFromTasks(tasks);
+  }
 
   // 직원 DB가 없으면 업무의 '담당자(사람)' 속성에서 직원 목록을 도출한다.
   let staff: Staff[] = staffPages.map(mapStaff);
