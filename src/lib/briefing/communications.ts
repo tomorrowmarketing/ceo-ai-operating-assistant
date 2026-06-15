@@ -1,14 +1,13 @@
 import type { CommHighlight, Severity } from "@/lib/types";
-import { data } from "@/lib/data";
-
-const { advertiserName, communications } = data;
+import type { DataSource } from "@/lib/data";
 import { bySeverity } from "./utils";
 
 /**
  * 중요 커뮤니케이션 요약을 산출한다.
  * 부정 감성/회신 필요/중요 표시를 기준으로 severity를 부여한다.
  */
-export function buildCommHighlights(): CommHighlight[] {
+export function buildCommHighlights(ds: DataSource): CommHighlight[] {
+  const { advertiserName, communications } = ds;
   const highlights = communications
     .filter((c) => c.important || c.requiresReply || c.sentiment === "부정")
     .map<CommHighlight>((c) => {

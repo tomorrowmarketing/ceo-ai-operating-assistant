@@ -1,8 +1,6 @@
 import type { DailyBriefing } from "@/lib/types";
-import { data } from "@/lib/data";
+import type { DataSource } from "@/lib/data";
 import { isOverdue } from "./utils";
-
-const { advertisers, communications, tasks } = data;
 import { buildScheduleSummary } from "./schedule";
 import { buildCeoActionItems } from "./actionItems";
 import { buildRiskSignals } from "./riskSignals";
@@ -33,13 +31,17 @@ function formatKoreanDate(d: string): string {
  * 일일 브리핑 객체를 조립한다.
  * 대시보드는 이 단일 객체를 받아 화면을 구성한다.
  */
-export function buildDailyBriefing(today: string = data.today): DailyBriefing {
-  const schedule = buildScheduleSummary(today);
-  const actionItems = buildCeoActionItems(today);
-  const riskSignals = buildRiskSignals(today);
-  const staffBottlenecks = buildStaffBottlenecks(today);
-  const commHighlights = buildCommHighlights();
-  const financeAlerts = buildFinanceAlerts(today);
+export function buildDailyBriefing(
+  ds: DataSource,
+  today: string = ds.today
+): DailyBriefing {
+  const { advertisers, communications, tasks } = ds;
+  const schedule = buildScheduleSummary(ds, today);
+  const actionItems = buildCeoActionItems(ds, today);
+  const riskSignals = buildRiskSignals(ds, today);
+  const staffBottlenecks = buildStaffBottlenecks(ds, today);
+  const commHighlights = buildCommHighlights(ds);
+  const financeAlerts = buildFinanceAlerts(ds, today);
   const approvals = buildApprovals();
   const recommendations = buildRecommendations();
 

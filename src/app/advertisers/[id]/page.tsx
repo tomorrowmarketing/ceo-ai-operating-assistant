@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { loadDataSource } from "@/lib/data";
 import { allAdvertiserIds, buildAdvertiserDetail } from "@/lib/advertiser";
 import { formatKRW } from "@/lib/briefing/utils";
 import { Section, EmptyState } from "@/components/ui/Section";
@@ -10,8 +11,9 @@ import {
 } from "@/components/ui/SeverityBadge";
 
 /** 모든 광고주 상세 페이지를 정적 생성 */
-export function generateStaticParams() {
-  return allAdvertiserIds().map((id) => ({ id }));
+export async function generateStaticParams() {
+  const ds = await loadDataSource();
+  return allAdvertiserIds(ds).map((id) => ({ id }));
 }
 
 export default async function AdvertiserDetailPage({
@@ -20,7 +22,8 @@ export default async function AdvertiserDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const detail = buildAdvertiserDetail(id);
+  const ds = await loadDataSource();
+  const detail = buildAdvertiserDetail(ds, id);
   if (!detail) notFound();
 
   const { advertiser: a, manager, performance: p, risk } = detail;

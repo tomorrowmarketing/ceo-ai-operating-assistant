@@ -1,7 +1,5 @@
 import type { FinanceAlert, Severity } from "@/lib/types";
-import { data } from "@/lib/data";
-
-const { advertiserName, contracts, financeTransactions } = data;
+import type { DataSource } from "@/lib/data";
 import { bySeverity, daysBetween } from "./utils";
 
 /**
@@ -10,7 +8,11 @@ import { bySeverity, daysBetween } from "./utils";
  * - 임박한 입금예정/지출/세금계산서: 확인필요~주의
  * - 만료임박/갱신예정 계약: 주의~확인필요
  */
-export function buildFinanceAlerts(today: string): FinanceAlert[] {
+export function buildFinanceAlerts(
+  ds: DataSource,
+  today: string
+): FinanceAlert[] {
+  const { advertiserName, contracts, financeTransactions } = ds;
   const alerts: FinanceAlert[] = [];
 
   // 재무 거래

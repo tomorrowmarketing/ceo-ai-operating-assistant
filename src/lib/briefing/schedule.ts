@@ -1,13 +1,15 @@
 import type { ScheduleSummary } from "@/lib/types";
-import { data } from "@/lib/data";
-
-const { advertiserName, calendarEvents } = data;
+import type { DataSource } from "@/lib/data";
 
 /**
  * 오늘 일정 요약을 생성한다.
  * 개인 일정은 제목/세부내용을 노출하지 않고 "개인 일정"으로만 표기한다.
  */
-export function buildScheduleSummary(today: string): ScheduleSummary {
+export function buildScheduleSummary(
+  ds: DataSource,
+  today: string
+): ScheduleSummary {
+  const { advertiserName, calendarEvents } = ds;
   const todays = calendarEvents
     .filter((e) => e.date === today)
     .sort((a, b) => a.start.localeCompare(b.start));

@@ -61,8 +61,12 @@ docs/                  # 제품 문서 00~09
 ## 6. 데이터 / 로직 규칙
 
 - **타입은 `src/lib/types.ts` 한 곳에서만 정의**한다. 컴포넌트/로직은 여기서 import 한다.
-- 비즈니스 로직은 `src/lib/briefing/` 의 순수 함수로 작성한다. (UI에 로직을 넣지 않는다)
-- 날짜 기준은 Mock의 `TODAY` 상수를 사용해 **결정적(deterministic)** 으로 유지한다.
+- 비즈니스 로직은 `src/lib/briefing/` 의 순수 함수로 작성하며, **`DataSource` 를 인자로 받는다**(DI).
+  Mock 데이터를 직접 import 하지 않는다. UI에 로직을 넣지 않는다.
+- 데이터 접근은 **`src/lib/data` 의 `loadDataSource()`** 만 사용한다. (`@/lib/mock` 직접 참조 금지)
+  - `DATA_SOURCE=mock|notion` 으로 소스 전환. 기본 Mock, 실패 시 Mock 폴백. (docs/04, docs/10)
+  - 새 실데이터 소스는 `DataSource` 를 만족하는 어댑터로 추가한다.
+- 날짜 기준은 Mock의 `TODAY`(또는 소스의 `today`)를 사용해 **결정적(deterministic)** 으로 유지한다.
 - 운영 상태 라벨은 다음 5종만 사용한다: **긴급 · 주의 · 정상 · 확인필요 · 승인필요** (`Severity` 타입).
 
 ## 7. UI 규칙

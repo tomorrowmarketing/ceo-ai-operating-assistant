@@ -1,21 +1,11 @@
 import type { AdvertiserDetail } from "@/lib/types";
-import { data } from "@/lib/data";
+import type { DataSource } from "@/lib/data";
 import { buildRiskSignals } from "@/lib/briefing/riskSignals";
 import { daysBetween } from "@/lib/briefing/utils";
 
-const {
-  advertisers,
-  calendarEvents,
-  communications,
-  contracts,
-  financeTransactions,
-  staffById,
-  tasks,
-} = data;
-
 /** 모든 광고주 id (정적 경로 생성용) */
-export function allAdvertiserIds(): string[] {
-  return advertisers.map((a) => a.id);
+export function allAdvertiserIds(ds: DataSource): string[] {
+  return ds.advertisers.map((a) => a.id);
 }
 
 /** 미완료 → 마감 임박 순으로 업무 정렬 */
@@ -38,9 +28,19 @@ function sortTasks(today: string) {
  * 존재하지 않는 id 면 undefined.
  */
 export function buildAdvertiserDetail(
+  ds: DataSource,
   id: string,
-  today: string = data.today
+  today: string = ds.today
 ): AdvertiserDetail | undefined {
+  const {
+    advertisers,
+    calendarEvents,
+    communications,
+    contracts,
+    financeTransactions,
+    staffById,
+    tasks,
+  } = ds;
   const advertiser = advertisers.find((a) => a.id === id);
   if (!advertiser) return undefined;
 
@@ -60,7 +60,7 @@ export function buildAdvertiserDetail(
     .filter((f) => f.advertiserId === id)
     .sort((a, b) => a.dueDate.localeCompare(b.dueDate));
 
-  const risk = buildRiskSignals(today).find((r) => r.advertiserId === id);
+  const risk = buildRiskSignals(ds, today).find((r) => r.advertiserId === id);
 
   return {
     advertiser,

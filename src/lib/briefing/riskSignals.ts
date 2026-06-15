@@ -1,7 +1,5 @@
 import type { RiskSignal } from "@/lib/types";
-import { data } from "@/lib/data";
-
-const { advertisers, communications, contracts, financeTransactions } = data;
+import type { DataSource } from "@/lib/data";
 import { bySeverity, daysBetween } from "./utils";
 
 /**
@@ -9,7 +7,11 @@ import { bySeverity, daysBetween } from "./utils";
  * 광고주 = 계약 + 업무 + 커뮤니케이션 + 일정 + 재무 + 광고 성과 원칙에 따라
  * 성과 하락, 부정 커뮤니케이션, 미수금, 계약 만료, 접점 공백을 종합한다.
  */
-export function buildRiskSignals(today: string): RiskSignal[] {
+export function buildRiskSignals(
+  ds: DataSource,
+  today: string
+): RiskSignal[] {
+  const { advertisers, communications, contracts, financeTransactions } = ds;
   const result: RiskSignal[] = [];
 
   for (const adv of advertisers) {

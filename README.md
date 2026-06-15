@@ -42,6 +42,19 @@ npm run build   # 타입체크 + 프로덕션 빌드
 npm test        # 브리핑 비즈니스 로직 단위 테스트 (node:test + tsx)
 ```
 
+## 데이터 소스 (Mock ⇄ Notion)
+
+기본은 Mock이며, 환경변수로 실데이터(Notion API)로 전환합니다. (설계: [docs/10-notion-integration.md](docs/10-notion-integration.md))
+
+```bash
+# .env (또는 .env.local) — .env.example 참고
+DATA_SOURCE=mock     # 기본값, 토큰 없이 동작
+# DATA_SOURCE=notion # Notion API 사용 (NOTION_TOKEN + DB ID 필요)
+```
+
+- 모든 화면/로직은 `DataSource` 인터페이스에만 의존하며, 소스 전환은 `DATA_SOURCE` 하나로 토글됩니다.
+- 토큰 미설정/호출 실패 시 자동으로 Mock으로 폴백해 화면이 깨지지 않습니다.
+
 ## 주요 화면
 
 | 경로 | 설명 |

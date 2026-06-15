@@ -1,4 +1,5 @@
 import type { CeoActionItem } from "@/lib/types";
+import type { DataSource } from "@/lib/data";
 import { buildRiskSignals } from "./riskSignals";
 import { buildCommHighlights } from "./communications";
 import { buildFinanceAlerts } from "./financeAlerts";
@@ -10,11 +11,14 @@ import { bySeverity } from "./utils";
  * 위임 가능한 일반 업무는 제외하고, 대표의 판단/관계/의사결정이 필요한 항목만
  * 끌어올린다. 리스크 신호 · 부정 커뮤니케이션 · 재무 긴급 건을 종합한다.
  */
-export function buildCeoActionItems(today: string): CeoActionItem[] {
+export function buildCeoActionItems(
+  ds: DataSource,
+  today: string
+): CeoActionItem[] {
   const items: CeoActionItem[] = [];
 
   // 1) 긴급 리스크 광고주 → 대표 직접 개입
-  for (const r of buildRiskSignals(today)) {
+  for (const r of buildRiskSignals(ds, today)) {
     if (r.severity !== "긴급") continue;
     items.push({
       id: `risk-${r.advertiserId}`,
@@ -27,7 +31,7 @@ export function buildCeoActionItems(today: string): CeoActionItem[] {
   }
 
   // 2) 부정적 커뮤니케이션 (대표 명의 응대가 필요)
-  for (const c of buildCommHighlights()) {
+  for (const c of buildCommHighlights(ds)) {
     if (c.severity !== "긴급") continue;
     // 이미 리스크로 잡힌 광고주는 중복 방지
     if (items.some((i) => i.advertiserName && i.advertiserName === c.advertiserName)) {
@@ -44,7 +48,7 @@ export function buildCeoActionItems(today: string): CeoActionItem[] {
   }
 
   // 3) 재무 긴급 (연체/미수금) - 대표 인지 필요
-  for (const f of buildFinanceAlerts(today)) {
+  for (const f of buildFinanceAlerts(ds, today)) {
     if (f.severity !== "긴급") continue;
     items.push({
       id: `fin-${f.id}`,

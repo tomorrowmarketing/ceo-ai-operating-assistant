@@ -1,16 +1,15 @@
 import Link from "next/link";
-import { data } from "@/lib/data";
+import { loadDataSource } from "@/lib/data";
 import { formatKRW } from "@/lib/briefing/utils";
 import { AdvertiserStatusBadge, Chip } from "@/components/ui/SeverityBadge";
-
-const { advertisers, staffById } = data;
 
 export const metadata = {
   title: "광고주 목록 | 대표님 운영 비서",
 };
 
 /** 광고주 목록 (각 항목 → 360° 상세 페이지) */
-export default function AdvertisersPage() {
+export default async function AdvertisersPage() {
+  const { advertisers, staffById } = await loadDataSource();
   return (
     <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
       <div className="flex items-center justify-between">

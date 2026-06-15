@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { loadDataSource } from "@/lib/data";
 import { buildDailyBriefing } from "@/lib/briefing";
 import { DailyBriefingHeader } from "@/components/DailyBriefing";
 import { CeoActionItems } from "@/components/CeoActionItems";
@@ -17,8 +18,9 @@ import { AiRecommendedActions } from "@/components/AiRecommendedActions";
  *   대표가 먼저 판단해야 할 항목을 상단에 배치하고,
  *   이후 정보를 광고주 중심으로 정리한다. 일반 TODO 앱처럼 보이지 않게 한다.
  */
-export default function DashboardPage() {
-  const briefing = buildDailyBriefing();
+export default async function DashboardPage() {
+  const ds = await loadDataSource();
+  const briefing = buildDailyBriefing(ds);
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">

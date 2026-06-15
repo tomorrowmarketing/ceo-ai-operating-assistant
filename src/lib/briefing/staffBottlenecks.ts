@@ -1,14 +1,16 @@
 import type { StaffBottleneck } from "@/lib/types";
-import { data } from "@/lib/data";
-
-const { staff, tasks } = data;
+import type { DataSource } from "@/lib/data";
 import { bySeverity, daysBetween, isOverdue } from "./utils";
 
 /**
  * 직원별 지연 업무 요약(병목)을 산출한다.
  * 지연 업무가 많거나, 가장 오래된 지연이 클수록 severity가 높아진다.
  */
-export function buildStaffBottlenecks(today: string): StaffBottleneck[] {
+export function buildStaffBottlenecks(
+  ds: DataSource,
+  today: string
+): StaffBottleneck[] {
+  const { staff, tasks } = ds;
   const result: StaffBottleneck[] = [];
 
   for (const member of staff) {
