@@ -11,7 +11,8 @@
     "test": "node --import tsx --test \"src/**/*.test.ts\"",
     "notion:inspect": "node --env-file-if-exists=.env.local --env-file-if-exists=.env --import tsx scripts/inspect-notion.ts",
     "telegram:chatid": "node --env-file-if-exists=.env.local --env-file-if-exists=.env --import tsx scripts/telegram-chatid.ts",
-    "report:send": "node --env-file-if-exists=.env.local --env-file-if-exists=.env --import tsx scripts/send-report.ts"
+    "report:send": "node --env-file-if-exists=.env.local --env-file-if-exists=.env --import tsx scripts/send-report.ts",
+    "ai:preview": "node --env-file-if-exists=.env.local --env-file-if-exists=.env --import tsx scripts/preview-ai.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.104.1",

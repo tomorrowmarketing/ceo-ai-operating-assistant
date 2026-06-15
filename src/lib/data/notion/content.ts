@@ -56,4 +56,34 @@ export async function fetchTaskContent(
 
   return { text: lines.join("\n"), imageUrls };
 }
+
+/** 비전 API가 지원하는 이미지 타입 */
+const SUPPORTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+];
+
+/**
+ * 이미지 URL을 받아 base64로 다운로드한다.
+ * 지원하지 않는 타입이거나 maxBytes 초과 시 null (비전 API 거부 방지).
+ */
+export async function fetchImageBase64(
+  url: string,
+  maxBytes = 3_500_000
+): Promise<{ media_type: string; data: string } | null> {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const ct = res.headers.get("content-type") ?? "";
+    const mt = SUPPORTED_IMAGE_TYPES.find((t) => ct.includes(t));
+    if (!mt) return null;
+    const buf = Buffer.from(await res.arrayBuffer());
+    if (buf.length === 0 || buf.length > maxBytes) return null;
+    return { media_type: mt, data: buf.toString("base64") };
+  } catch {
+    return null;
+  }
+}
 /* eslint-enable @typescript-eslint/no-explicit-any */
