@@ -19,6 +19,17 @@ test("extractAdvertiserName: 알려진 광고주 우선 매칭", () => {
   assert.equal(extractAdvertiserName("미라클_소재 제작_진행 중"), "미라클");
 });
 
+test("extractAdvertiserName: 별칭 → 정식명, 일반 아이디 버킷", () => {
+  // 리바이어던 별칭 → 정식명으로 합침
+  assert.equal(
+    extractAdvertiserName("리바이어던_개인회생: 빚 걱정 없는"),
+    "법률사무소 리바이어던"
+  );
+  // 세부 미표기 아이디 → 일반 버킷, 단 아이디치과는 구분 유지
+  assert.equal(extractAdvertiserName("아이디_처진눈 효율 개선"), "아이디");
+  assert.equal(extractAdvertiserName("아이디치과_라미네이트"), "아이디치과");
+});
+
 test("extractAdvertiserName: [팀] 태그 제거 + 내부업무 제외", () => {
   assert.equal(extractAdvertiserName("[1팀] 6월 2주차 목표"), null);
   assert.equal(extractAdvertiserName("영업 랜딩 페이지 수정"), null);

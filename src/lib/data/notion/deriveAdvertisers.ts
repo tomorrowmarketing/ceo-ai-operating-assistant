@@ -38,7 +38,16 @@ export const KNOWN_ADVERTISERS = [
   // 약식 표기(긴 이름 다음에 매칭)
   "미라클",
   "JN",
+  "아이디", // 병원/치과/피부과로 구분 안 된 '아이디_...' 건의 일반 버킷
 ];
+
+/**
+ * 별칭 → 정식 광고주명 매핑. (제목의 약식 표기를 한 광고주로 합칠 때)
+ * 예: "리바이어던_개인회생" → "법률사무소 리바이어던"
+ */
+export const ALIASES: Record<string, string> = {
+  리바이어던: "법률사무소 리바이어던",
+};
 
 /** 광고주가 아닌 일반 업무 제목 단어 (폴백에서 제외) */
 const TASK_STOPWORDS =
@@ -60,10 +69,15 @@ export function extractAdvertiserName(rawTitle: string): string | null {
     .replace(/^[[\]"'\s]+/, "")
     .trim();
 
-  // 1) 알려진 광고주 우선 매칭 (긴 이름부터)
+  // 1) 알려진 광고주 우선 매칭 (긴 이름부터 — '아이디치과'가 '아이디'보다 먼저)
   const sorted = [...KNOWN_ADVERTISERS].sort((a, b) => b.length - a.length);
   for (const name of sorted) {
     if (title.includes(name)) return name;
+  }
+
+  // 1-2) 별칭 매칭 (약식 표기 → 정식 광고주명)
+  for (const [alias, canonical] of Object.entries(ALIASES)) {
+    if (title.includes(alias)) return canonical;
   }
 
   // 2) 폴백: '_'/'('/',' 앞 첫 구간에 업종 키워드가 있고, 업무성 단어가 없을 때만
