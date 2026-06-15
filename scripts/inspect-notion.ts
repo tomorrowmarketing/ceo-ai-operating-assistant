@@ -15,6 +15,32 @@ import { readNotionEnv } from "@/lib/data/notion/env";
 const NOTION_API = "https://api.notion.com/v1";
 const NOTION_VERSION = "2022-06-28";
 
+/** 통합이 접근 가능한 모든 데이터베이스를 검색해 제목+ID 나열 */
+async function listAllDatabases(token: string) {
+  const res = await fetch(`${NOTION_API}/search`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Notion-Version": NOTION_VERSION,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      filter: { value: "database", property: "object" },
+      page_size: 100,
+    }),
+  });
+  if (!res.ok) {
+    console.log(`(검색 실패: ${res.status})`);
+    return;
+  }
+  const json = (await res.json()) as { results: { id: string; title?: unknown }[] };
+  console.log(`\n===== 통합이 접근 가능한 데이터베이스 (${json.results.length}개) =====`);
+  for (const db of json.results) {
+    console.log(`   "${plainTitle(db.title)}"  →  ${db.id.replace(/-/g, "")}`);
+  }
+  console.log("=================================================\n");
+}
+
 async function retrieveDatabase(token: string, id: string) {
   const res = await fetch(`${NOTION_API}/databases/${id}`, {
     headers: {
@@ -44,6 +70,8 @@ async function main() {
     );
     process.exit(1);
   }
+
+  await listAllDatabases(env.token);
 
   const targets = Object.entries(env.db) as [string, string][];
   for (const [key, id] of targets) {
