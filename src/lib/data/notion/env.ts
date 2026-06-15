@@ -17,6 +17,7 @@ export interface NotionEnv {
 
 /** DATA_SOURCE 값 (mock | notion). 미설정 시 mock. */
 export function activeSourceName(): "mock" | "notion" {
+  if (process.env.ENABLE_NOTION_INTEGRATION !== "true") return "mock";
   return process.env.DATA_SOURCE === "notion" ? "notion" : "mock";
 }
 
@@ -36,6 +37,8 @@ export function cleanDatabaseId(raw?: string): string {
  * Notion 환경변수를 읽는다. 필수 값이 없으면 null (→ 호출부에서 Mock 폴백).
  */
 export function readNotionEnv(): NotionEnv | null {
+  if (process.env.ENABLE_NOTION_INTEGRATION !== "true") return null;
+
   const token = process.env.NOTION_TOKEN;
   if (!token) return null;
 

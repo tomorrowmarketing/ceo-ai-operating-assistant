@@ -5,8 +5,8 @@
  * 출력한다. 기존 Notion을 전혀 바꾸지 않고, 읽기만 한다.
  *
  * 사용:
- *   1) .env.local 에 NOTION_TOKEN + NOTION_DB_* 입력 (DATA_SOURCE 는 무관)
- *   2) npm run notion:inspect
+ * Notion integration is disabled by default. This script only works when
+ * ENABLE_NOTION_INTEGRATION=true and credentials are intentionally restored.
  *
  * 출력된 칸 목록을 보고 src/lib/data/notion/map.ts 의 PROPS 매핑을 맞춘다.
  */

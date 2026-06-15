@@ -20,6 +20,7 @@ const CONTENT_TASK_LIMIT = 16;
 const IMAGE_LIMIT = 5;
 
 export function aiConfigured(): boolean {
+  if (process.env.ENABLE_AI_SUMMARY !== "true") return false;
   return !!process.env.ANTHROPIC_API_KEY;
 }
 
