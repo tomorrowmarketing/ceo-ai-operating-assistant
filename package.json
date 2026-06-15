@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "node --import tsx --test \"src/**/*.test.ts\"",
-    "notion:inspect": "node --import tsx scripts/inspect-notion.ts"
+    "notion:inspect": "node --env-file-if-exists=.env.local --env-file-if-exists=.env --import tsx scripts/inspect-notion.ts"
   },
   "dependencies": {
     "next": "^15.1.6",

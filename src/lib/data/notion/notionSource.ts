@@ -30,6 +30,16 @@ export async function createNotionSource(): Promise<DataSource> {
   if (!env) throw new Error("NOTION_TOKEN 이(가) 설정되지 않았습니다.");
   const { token, db } = env;
 
+  // 표 하나가 실패(미연결/404 등)해도 나머지는 표시되도록 부분 실패를 허용한다.
+  const safe = async (label: string, id: string) => {
+    try {
+      return await queryDatabase(token, id);
+    } catch (e) {
+      if (id) console.warn(`[notion] '${label}' 로드 실패:`, (e as Error).message);
+      return [];
+    }
+  };
+
   const [
     advPages,
     staffPages,
@@ -39,13 +49,13 @@ export async function createNotionSource(): Promise<DataSource> {
     finPages,
     contractPages,
   ] = await Promise.all([
-    queryDatabase(token, db.advertisers),
-    queryDatabase(token, db.staff),
-    queryDatabase(token, db.tasks),
-    queryDatabase(token, db.communications),
-    queryDatabase(token, db.calendar),
-    queryDatabase(token, db.finance),
-    queryDatabase(token, db.contracts),
+    safe("광고주", db.advertisers),
+    safe("직원", db.staff),
+    safe("업무", db.tasks),
+    safe("커뮤니케이션", db.communications),
+    safe("일정", db.calendar),
+    safe("재무", db.finance),
+    safe("계약", db.contracts),
   ]);
 
   const advertisers = advPages.map(mapAdvertiser);
