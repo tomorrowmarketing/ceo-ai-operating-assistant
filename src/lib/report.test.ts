@@ -20,6 +20,6 @@ test("reportToText: 핵심 머리말 포함", () => {
   const text = reportToText(r);
   assert.ok(text.includes("오늘의 운영 보고서"));
   assert.ok(text.includes("[ 요약 ]"));
-  assert.ok(text.includes("[ 직원별 업무 ]"));
-  assert.ok(text.includes("[ 광고주별 진행 ]"));
+  assert.ok(text.includes("담당자별 업무"));
+  assert.ok(text.includes("광고주별 진행"));
 });

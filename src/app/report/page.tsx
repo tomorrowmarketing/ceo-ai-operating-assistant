@@ -48,12 +48,16 @@ export default async function ReportPage() {
       </div>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
-        {/* 직원별 */}
-        <Section title="직원별 업무" accent="amber" count={report.byStaff.length}>
+        {/* 담당자별 상세 */}
+        <Section
+          title="담당자별 업무 (상세)"
+          accent="amber"
+          count={report.byStaff.length}
+        >
           {report.byStaff.length === 0 ? (
             <EmptyState message="표시할 업무가 없습니다." />
           ) : (
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               {report.byStaff.map((st) => (
                 <li
                   key={st.name}
@@ -67,16 +71,39 @@ export default async function ReportPage() {
                       진행 {st.inProgress} · 대기 {st.waiting}
                       {st.stale > 0 && (
                         <span className="ml-1 font-semibold text-amber-600">
-                          · 지난건 {st.stale}
+                          · 지연 {st.stale}
                         </span>
                       )}
                     </span>
                   </div>
-                  {st.topStaleTask && (
-                    <p className="mt-1 text-xs text-gray-500">
-                      가장 오래된 미완료: {st.topStaleTask}
-                    </p>
-                  )}
+                  <ul className="mt-2 space-y-1">
+                    {st.tasks.map((t, i) => (
+                      <li key={i} className="flex items-start gap-2 text-xs">
+                        <span
+                          className={`mt-0.5 shrink-0 rounded px-1.5 py-0.5 font-semibold ${
+                            t.stale
+                              ? "bg-red-50 text-red-600"
+                              : t.status === "진행중"
+                                ? "bg-blue-50 text-blue-600"
+                                : "bg-gray-100 text-gray-500"
+                          }`}
+                        >
+                          {t.stale ? "지연" : t.status}
+                        </span>
+                        <span className="flex-1 text-gray-700">
+                          {t.title}
+                          {(t.advertiserName || t.date) && (
+                            <span className="text-gray-400">
+                              {" — "}
+                              {[t.advertiserName, t.date]
+                                .filter(Boolean)
+                                .join(" · ")}
+                            </span>
+                          )}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
                 </li>
               ))}
             </ul>
