@@ -2,11 +2,14 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   PROPS,
+  extractPeople,
   maskPhone,
   mapAdvertiser,
   mapCalendarEvent,
   mapCommunication,
   mapFinance,
+  mapTask,
+  normalizeTaskStatus,
 } from "./map";
 import type { NotionPage } from "./client";
 
@@ -18,11 +21,52 @@ const number = (n: number) => ({ number: n });
 const date = (start: string, end?: string) => ({ date: { start, end } });
 const checkbox = (b: boolean) => ({ checkbox: b });
 const relation = (id: string) => ({ relation: [{ id }] });
+const status = (name: string) => ({ status: { name } });
+const people = (...users: { id: string; name: string }[]) => ({ people: users });
 
 test("maskPhone: 다양한 형식의 전화번호를 마스킹", () => {
   assert.equal(maskPhone("010-1234-5678"), "010-****-5678");
   assert.equal(maskPhone("01012345678"), "010-****-5678");
   assert.equal(maskPhone("문의 010 9876 5432 입니다"), "문의 010-****-5432 입니다");
+});
+
+test("normalizeTaskStatus: 거래처 상태 표기 → TaskStatus", () => {
+  assert.equal(normalizeTaskStatus("진행 전"), "대기");
+  assert.equal(normalizeTaskStatus("진행 중"), "진행중");
+  assert.equal(normalizeTaskStatus("완료"), "완료");
+  assert.equal(normalizeTaskStatus("보류"), "지연");
+  assert.equal(normalizeTaskStatus("알수없음"), "대기");
+});
+
+test("mapTask: Status 타입 상태 + Person 담당자 + 광고주 관계", () => {
+  const k = PROPS.task;
+  const page: NotionPage = {
+    id: "task-1",
+    properties: {
+      [k.title]: title("법무사무소 도경 5차 소재 매체 세팅"),
+      [k.assignee]: people({ id: "u-kim", name: "김담" }),
+      [k.status]: status("진행 중"),
+      [k.dueDate]: date("2026-06-11"),
+      [k.advertiser]: relation("adv-dogyeong"),
+    },
+  };
+  const t = mapTask(page);
+  assert.equal(t.status, "진행중"); // 정규화됨
+  assert.equal(t.assigneeId, "u-kim");
+  assert.equal(t.advertiserId, "adv-dogyeong");
+  assert.equal(t.priority, "보통"); // 우선순위 칸 없음 → 기본
+});
+
+test("extractPeople: 담당자 사람 속성에서 고유 직원 도출", () => {
+  const k = PROPS.task;
+  const pages = [
+    { properties: { [k.assignee]: people({ id: "u1", name: "한빛 이" }) } },
+    { properties: { [k.assignee]: people({ id: "u1", name: "한빛 이" }) } },
+    { properties: { [k.assignee]: people({ id: "u2", name: "박다인" }) } },
+  ];
+  const staff = extractPeople(pages, k.assignee);
+  assert.equal(staff.length, 2);
+  assert.deepEqual(staff.map((s) => s.name).sort(), ["박다인", "한빛 이"]);
 });
 
 test("mapAdvertiser: 속성 → 도메인 + id는 페이지 id", () => {

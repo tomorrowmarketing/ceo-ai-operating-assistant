@@ -2,6 +2,8 @@ import type { DataSource } from "../source";
 import { queryDatabase } from "./client";
 import { readNotionEnv } from "./env";
 import {
+  PROPS,
+  extractPeople,
   mapAdvertiser,
   mapCalendarEvent,
   mapCommunication,
@@ -10,6 +12,7 @@ import {
   mapStaff,
   mapTask,
 } from "./map";
+import type { Staff } from "@/lib/types";
 
 /** Asia/Seoul 기준 오늘 날짜 (YYYY-MM-DD) */
 function seoulToday(): string {
@@ -46,8 +49,19 @@ export async function createNotionSource(): Promise<DataSource> {
   ]);
 
   const advertisers = advPages.map(mapAdvertiser);
-  const staff = staffPages.map(mapStaff);
   const tasks = taskPages.map(mapTask);
+
+  // 직원 DB가 없으면 업무의 '담당자(사람)' 속성에서 직원 목록을 도출한다.
+  let staff: Staff[] = staffPages.map(mapStaff);
+  if (staff.length === 0) {
+    staff = extractPeople(taskPages, PROPS.task.assignee).map((p) => ({
+      id: p.id,
+      name: p.name || "이름없음",
+      role: "",
+      team: "운영",
+    }));
+  }
+
   const communications = commPages.map(mapCommunication);
   const calendarEvents = calPages.map(mapCalendarEvent);
   const financeTransactions = finPages.map(mapFinance);

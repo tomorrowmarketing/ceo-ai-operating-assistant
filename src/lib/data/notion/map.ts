@@ -44,13 +44,14 @@ export const PROPS = {
     lastContact: "마지막접점",
   },
   staff: { name: "이름", role: "역할", team: "팀" },
+  // Tomorrow company "업무 진행 현황" 표 기준 (npm run notion:inspect 로 최종 확인)
   task: {
-    title: "제목",
-    advertiser: "광고주",
+    title: "이름",
+    advertiser: "광고주 진행 상황",
     assignee: "담당자",
     status: "상태",
-    priority: "우선순위",
-    dueDate: "마감일",
+    priority: "우선순위", // 없으면 기본 '보통'
+    dueDate: "날짜",
   },
   communication: {
     channel: "채널",
@@ -106,8 +107,35 @@ function num(p: Props, key: string): number {
   const n = p[key]?.number;
   return typeof n === "number" ? n : 0;
 }
+/** Select / Status 두 타입 모두 지원 (Notion 'Status' 타입은 .status 아래에 있음) */
 function select(p: Props, key: string): string {
-  return p[key]?.select?.name ?? "";
+  const v = p[key];
+  return v?.select?.name ?? v?.status?.name ?? "";
+}
+
+/** 페이지 목록에서 Person 속성의 고유 사용자 {id, name} 추출 (직원 도출용) */
+export function extractPeople(
+  pages: { properties: Props }[],
+  key: string
+): { id: string; name: string }[] {
+  const seen = new Map<string, string>();
+  for (const pg of pages) {
+    const ppl = pg.properties[key]?.people;
+    if (Array.isArray(ppl)) {
+      for (const u of ppl) if (u?.id) seen.set(u.id, u.name ?? "");
+    }
+  }
+  return [...seen].map(([id, name]) => ({ id, name }));
+}
+
+/** 거래처의 자유로운 상태 표기를 우리 TaskStatus 로 정규화 */
+export function normalizeTaskStatus(raw: string): TaskStatus {
+  const v = raw.replace(/\s/g, "");
+  if (v.includes("완료")) return "완료";
+  if (v.includes("지연") || v.includes("보류")) return "지연";
+  if (v.includes("진행")) return v.includes("전") ? "대기" : "진행중";
+  if (v.includes("대기") || v.includes("예정")) return "대기";
+  return "대기";
 }
 function dateOnly(p: Props, key: string): string {
   return (p[key]?.date?.start ?? "").slice(0, 10);
@@ -176,7 +204,7 @@ export function mapTask(page: NotionPage): Task {
     title: plainText(p, k.title),
     advertiserId: refId(p, k.advertiser) || null,
     assigneeId: refId(p, k.assignee),
-    status: (select(p, k.status) || "대기") as TaskStatus,
+    status: normalizeTaskStatus(select(p, k.status)),
     priority: (select(p, k.priority) || "보통") as TaskPriority,
     dueDate: dateOnly(p, k.dueDate),
   };
