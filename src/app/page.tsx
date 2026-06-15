@@ -29,12 +29,20 @@ export default async function DashboardPage() {
         <span className="text-xs font-bold tracking-tight text-gray-400">
           대표님 운영 비서
         </span>
-        <Link
-          href="/advertisers"
-          className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-600 hover:bg-gray-50"
-        >
-          광고주 목록 →
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/report"
+            className="rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-gray-700"
+          >
+            오늘의 보고서
+          </Link>
+          <Link
+            href="/advertisers"
+            className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-600 hover:bg-gray-50"
+          >
+            광고주 목록 →
+          </Link>
+        </div>
       </nav>
 
       {/* 1. 일일 브리핑 헤더 + 핵심 지표 */}
