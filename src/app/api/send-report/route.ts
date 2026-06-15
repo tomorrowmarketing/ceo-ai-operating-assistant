@@ -3,6 +3,7 @@ import { sendDailyReport } from "@/lib/notify/sendReport";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+const deliveryEnabled = process.env.ENABLE_DAILY_REPORT_DELIVERY === "true";
 
 /**
  * 일일 보고서 발송 엔드포인트.
@@ -12,6 +13,13 @@ export const dynamic = "force-dynamic";
  * 헤더가 일치할 때만 실행한다. (Vercel Cron 은 이 헤더를 자동으로 붙임)
  */
 export async function GET(req: Request) {
+  if (!deliveryEnabled) {
+    return NextResponse.json(
+      { error: "daily report delivery is disabled" },
+      { status: 410 },
+    );
+  }
+
   const secret = process.env.CRON_SECRET;
   if (secret) {
     const auth = req.headers.get("authorization");

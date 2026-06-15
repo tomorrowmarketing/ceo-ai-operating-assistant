@@ -18,6 +18,16 @@ export async function sendDailyReport(): Promise<{
   subject: string;
   results: SendResult[];
 }> {
+  if (process.env.ENABLE_DAILY_REPORT_DELIVERY !== "true") {
+    return {
+      subject: "Daily report delivery disabled",
+      results: [
+        { channel: "email", ok: false, detail: "delivery disabled" },
+        { channel: "telegram", ok: false, detail: "delivery disabled" },
+      ],
+    };
+  }
+
   const ds = await loadDataSource();
   const report = buildDailyReport(ds);
   const ai = await buildAiSummary(report, ds); // 키 없으면 null → 집계 보고서로
